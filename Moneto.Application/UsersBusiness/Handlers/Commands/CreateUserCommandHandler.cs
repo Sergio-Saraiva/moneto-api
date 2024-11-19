@@ -8,7 +8,7 @@ using OperationResult;
 
 namespace Moneto.Application.UsersBusiness.Handlers.Commands;
 
-public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Result<CreateUserCommandViewModel>>
+public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Result<UserViewModel>>
 {
     private readonly IUsersRepository _userRepository;
 
@@ -17,12 +17,12 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Resul
         _userRepository = userRepository;
     }
 
-    public async Task<Result<CreateUserCommandViewModel>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+    public async Task<Result<UserViewModel>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         var user = await _userRepository.GetByEmailAsync(request.Email);
         if(user != null)
         {
-            return Result.Error<CreateUserCommandViewModel>(new Exception("User already exists"));
+            return Result.Error<UserViewModel>(new Exception("User already exists"));
         }
 
         var salt = Guid.NewGuid().ToString();
@@ -37,7 +37,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Resul
         };
 
         await _userRepository.AddAsync(newUser);
-        return Result.Success(new CreateUserCommandViewModel
+        return Result.Success(new UserViewModel
         {
             Name = newUser.Name,
             Email = newUser.Email
