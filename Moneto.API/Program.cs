@@ -26,6 +26,7 @@ public class Program
         builder.Services.AddPostgres(appSettings);
         builder.Services.AddAppMediatR();
         builder.Services.AddAppDependencyInjection();
+        builder.Services.AddAutoMapper();
         if(builder.Environment.IsDevelopment()) {
             builder.Services.AddDevCookieDependencyInjection();
             builder.Services.AddDevCors(appSettings);

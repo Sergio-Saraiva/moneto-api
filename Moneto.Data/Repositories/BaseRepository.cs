@@ -39,7 +39,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, IBaseEntity
         throw new NotImplementedException();
     }
 
-    public Task<T> GetByIdAsync(int id)
+    public Task<T> GetByIdAsync(Guid id)
     {
         throw new NotImplementedException();
     }
@@ -52,5 +52,10 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, IBaseEntity
     private async Task SaveChanges()
     {
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<List<T>> ListByCreatedByIdAsync(Guid id)
+    {
+        return await _dbSet.Where(x => x.CreatedBy == id && !x.IsDeleted).ToListAsync();
     }
 }
