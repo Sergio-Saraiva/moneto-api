@@ -9,6 +9,7 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        var environment = builder.Environment.EnvironmentName;
         var appSettings = builder.Configuration.AddJsonFile(
                 $"appsettings.{builder.Environment.EnvironmentName}.json",
                 optional: true,
@@ -25,6 +26,16 @@ public class Program
         builder.Services.AddPostgres(appSettings);
         builder.Services.AddAppMediatR();
         builder.Services.AddAppDependencyInjection();
+        if(builder.Environment.IsDevelopment()) {
+            builder.Services.AddDevCookieDependencyInjection();
+            builder.Services.AddDevCors(appSettings);
+        }
+        if(!builder.Environment.IsDevelopment()) {
+            builder.Services.AddProdCookieDependencyInjection();
+            builder.Services.AddProdCors(appSettings);
+        }
+        builder.Services.AddAuthentication();
+
 
         var app = builder.Build();
 
@@ -33,12 +44,24 @@ public class Program
         {
             app.UseSwagger();
             app.UseSwaggerUI();
+            app.UseCors("DevCorsPolicy");
+            app.UseCookiePolicy(new CookiePolicyOptions {
+                Secure = CookieSecurePolicy.None,
+            });
         }
 
-        app.UseHttpsRedirection();
+        if (!app.Environment.IsDevelopment())
+        {
+            app.UseCors("ProdCorsPolicy");
+            app.UseCookiePolicy(new CookiePolicyOptions {
+                Secure = CookieSecurePolicy.Always,
+            });
+            app.UseHttpsRedirection();
+        }
 
+        app.UseAuthentication();
+        
         app.UseAuthorization();
-
 
         app.MapControllers();
 

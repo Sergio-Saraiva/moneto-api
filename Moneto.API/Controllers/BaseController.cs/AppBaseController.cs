@@ -21,6 +21,13 @@ public class AppBaseController : ControllerBase
         (_, _, var error) => HandleError(error)
     };
 
+    protected async Task<IActionResult> SendRequestAsync(IRequest<Result> request)
+    => await _mediator.Send(request) switch
+    {
+        (true, _) => Ok(),
+        (_, var error) => HandleError(error)
+    };
+
     private IActionResult HandleError(Exception error)
     => error switch 
     {
