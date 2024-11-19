@@ -1,0 +1,6 @@
+@Moneto.API_HostAddress = http://localhost:5201
+
+GET {{Moneto.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
