@@ -7,4 +7,5 @@ public interface IExpenseCategoriesRepository : IBaseRepository<ExpenseCategory>
 {
     Task<List<ExpenseCategory>> GetByUserIdAsync(Guid userId);
     Task<ExpenseCategory> GetByBankAccountAsync(string cardNumber);
+    Task AddDefaultCategoriesAsync(Guid userId);
 }

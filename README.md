@@ -11,9 +11,10 @@ Moneto API is the API for our Moneto Mobile, Web and Desktop applications.
 
 ## How to run
 - [.Net Core 8.0](https://dotnet.microsoft.com/pt-br/download/dotnet/8.0) installed
-- [PostgresSQL](https://www.postgresql.org/download/) Database
+- [Entity Framework CLI](https://learn.microsoft.com/pt-br/ef/core/cli/dotnet) tool installed
+- [PostgresSQL](https://www.postgresql.org/download/) database installed
 - [Make](https://www.geeksforgeeks.org/how-to-install-make-on-ubuntu/) installed
-- ```git clone https://github.com/Sergio-Saraiva/moneto-api.git```
+- Clone repo ```git clone https://github.com/Sergio-Saraiva/moneto-api.git```
 - Create a ```appsettings.Development.json``` with ```appsettings.json``` example structure
 - Run migrations with ```make migrate```
 - ```cd Moneto.API```

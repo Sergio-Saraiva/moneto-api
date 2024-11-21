@@ -11,10 +11,14 @@ namespace Moneto.Application.UsersBusiness.Handlers.Commands;
 public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Result<UserViewModel>>
 {
     private readonly IUsersRepository _userRepository;
+    private readonly IExpenseCategoriesRepository _expenseCategoriesRepository;
+    private readonly IExpenseOwnersRepository _expenseOwnersRepository;
 
-    public CreateUserCommandHandler(IUsersRepository userRepository)
+    public CreateUserCommandHandler(IUsersRepository userRepository, IExpenseCategoriesRepository expenseCategoriesRepository, IExpenseOwnersRepository expenseOwnersRepository)
     {
         _userRepository = userRepository;
+        _expenseOwnersRepository = expenseOwnersRepository;
+        _expenseCategoriesRepository = expenseCategoriesRepository;
     }
 
     public async Task<Result<UserViewModel>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
@@ -36,7 +40,13 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Resul
             PasswordSalt = salt
         };
 
-        await _userRepository.AddAsync(newUser);
+        var createdUser =  await _userRepository.AddAsync(newUser);
+        await _expenseCategoriesRepository.AddDefaultCategoriesAsync(newUser.Id);
+        await _expenseOwnersRepository.AddAsync(new ExpenseOwner {
+            Email = createdUser.Email,
+            Name = createdUser.Name,
+        }, createdUser);
+        
         return Result.Success(new UserViewModel
         {
             Name = newUser.Name,

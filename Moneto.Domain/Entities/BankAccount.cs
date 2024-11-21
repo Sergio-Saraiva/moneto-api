@@ -9,5 +9,6 @@ namespace Moneto.Domain.Entities
         public string Name { get; set; }
         public string Bank { get; set; }
         public List<Card> Cards { get; set; }
+        public List<Expense> Expenses { get; set; }
     }
 }

@@ -12,6 +12,9 @@ public static class AppDependencyInjection
     public static void AddAppDependencyInjection(this IServiceCollection services)
     {
         services.AddScoped<IUsersRepository, UsersRepository>();
+        services.AddScoped<IExpensesRepository, ExpensesRepository>();
+        services.AddScoped<IExpenseCategoriesRepository, ExpenseCategoriesRepository>();
+        services.AddScoped<IExpenseOwnersRepository, ExpenseOwnersRepository>();
 
         services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

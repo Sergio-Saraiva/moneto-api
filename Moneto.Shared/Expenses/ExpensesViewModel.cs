@@ -8,5 +8,6 @@ public class ExpenseViewModel {
     public ExpenseOwnerViewModel ExpenseOwner { get; set; }
     public string Description { get; set; }
     public bool IsFromCard { get; set; }
-     public CardViewModel Card { get; set; }
+    public CardViewModel Card { get; set; }
+    public long Value { get; set; }
 }

@@ -1,4 +1,5 @@
 using AutoMapper;
+using Moneto.Application.ExpensesBusiness.Requests.Commands;
 using Moneto.Domain.Entities;
 using Moneto.Shared.Expenses;
 
@@ -8,6 +9,7 @@ public class MappingProfiles : Profile
 {
     public MappingProfiles()
     {
-        CreateMap<Expense, ExpenseViewModel>();
+        CreateMap<Expense, ExpenseViewModel>().ReverseMap();
+        CreateMap<CreateExpenseCommand, Expense>().ReverseMap();
     }
 }

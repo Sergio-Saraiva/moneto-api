@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Moneto.Data.Context;
+using Moneto.Domain.Entities;
 using Moneto.Domain.Entities.Base;
 using Moneto.Domain.Repositories.Base;
 
@@ -16,14 +17,14 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, IBaseEntity
         _dbSet = _context.Set<T>();
     }
 
-    public async Task<T> AddAsync(T entity)
+    public async Task<T> AddAsync(T entity, User createdBy)
     {
         var guid = Guid.NewGuid();
         entity.Id = guid;
         entity.CreatedAt = DateTime.UtcNow;
         entity.UpdatedAt = DateTime.UtcNow;
         entity.IsDeleted = false;
-        entity.CreatedBy = guid;
+        entity.CreatedBy = createdBy.Id;
         _dbSet.Add(entity);
         await SaveChanges();
         return entity;
@@ -39,9 +40,9 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, IBaseEntity
         throw new NotImplementedException();
     }
 
-    public Task<T> GetByIdAsync(Guid id)
+    public async Task<T?> GetByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        return await _dbSet.FirstOrDefaultAsync(x => x.Id == id);
     }
 
     public Task UpdateAsync(T entity)
@@ -49,7 +50,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, IBaseEntity
         throw new NotImplementedException();
     }
 
-    private async Task SaveChanges()
+    protected async Task SaveChanges()
     {
         await _context.SaveChangesAsync();
     }
@@ -57,5 +58,10 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, IBaseEntity
     public async Task<List<T>> ListByCreatedByIdAsync(Guid id)
     {
         return await _dbSet.Where(x => x.CreatedBy == id && !x.IsDeleted).ToListAsync();
+    }
+
+    public Task<T> AddAsync(T entity)
+    {
+        throw new NotImplementedException();
     }
 }
